@@ -19,3 +19,5 @@ jobs:
       contents: write
     uses: ./.github/workflows/publish-npm-package.yml
     secrets: inherit
+    with:
+      packagePath: './another-package'

@@ -7,5 +7,5 @@ jobs:
   publish:
     permissions:
       contents: write
-    uses: ./.github/workflows/publish-npm-package2.yml
+    uses: ./.github/workflows/publish-npm-package.yml
     secrets: inherit

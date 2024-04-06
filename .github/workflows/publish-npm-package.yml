@@ -42,20 +42,20 @@ jobs:
         with:
           node-version: 20
 
-      - name: Navigate to package directory
-        run: cd ${{ inputs.packagePath }}
-
       #  TODO: add build command
       # - name: Install dependencies and build
+      #   working-directory: ${{ inputs.packagePath }}
       #   run: |
       #     npm run co:login
       #     npm install
       #     npm run build
 
       # - name: Lint
+      #   working-directory: ${{ inputs.packagePath }}
       #   run: npm run lint --if-present
 
       # - name: Run Unit Tests
+      #   working-directory: ${{ inputs.packagePath }}
       #   run: npm run test:unit --if-present
 
       - name: Configure Git
@@ -64,6 +64,7 @@ jobs:
           git config --global user.email '166193391+MikeyPartonBot[bot]@users.noreply.github.com'
 
       - name: 'Automated Version Bump'
+        working-directory: ${{ inputs.packagePath }}
         run: |
           npm version ${{ inputs.releaseType }} --git-tag-version false
           NEW_VERSION=$(cat package.json | jq -r '.version')

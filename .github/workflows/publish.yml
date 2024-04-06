@@ -27,9 +27,10 @@ jobs:
 
       - name: Configure Git
         run: |
+          echo ${{ steps.app-token.outputs.token }}
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git config --global http.extraheader "AUTHORIZATION: bearer ${{ steps.app-token.outputs.token }}"
+          git config --local http.extraheader 'AUTHORIZATION: bearer ${{ steps.app-token.outputs.token }}'
 
       - name: 'Automated Version Bump'
         run: |

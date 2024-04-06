@@ -7,7 +7,7 @@ on:
         description: Path to the package to publish
         required: false
         type: string
-        default:
+        default: './'
       releaseType:
         description: Type of release to publish
         required: false
@@ -19,9 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    defaults:
-      run:
-        working-directory: ${{ inputs.packagePath }}
     steps:
       - name: Validate releaseType
         run: |
@@ -44,6 +41,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Navigate to package directory
+        run: cd ${{ inputs.packagePath }}
 
       #  TODO: add build command
       # - name: Install dependencies and build

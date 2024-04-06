@@ -4,12 +4,12 @@ on:
   workflow_call:
     inputs:
       packagePath:
-        description: 'Path to the package to publish'
+        description: Path to the package to publish
         required: false
         type: string
-        default: './'
+        default:
       releaseType:
-        description: 'Type of release to publish'
+        description: Type of release to publish
         required: false
         type: string
         default: 'patch'

@@ -23,13 +23,6 @@ jobs:
       run:
         working-directory: ${{ inputs.packagePath }}
     steps:
-      - name: Validate releaseType
-        run: |
-          case "${{ inputs.releaseType }}" in
-            patch|minor|major) ;;
-            *) echo "Error: Invalid releaseType. Allowed values are 'patch', 'minor', 'major'." && exit 1 ;;
-          esac
-
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
@@ -37,16 +30,13 @@ jobs:
           private-key: ${{ secrets.PRIVATE_KEY }}
 
       - uses: actions/checkout@v4
-        with:
-          token: ${{ steps.app-token.outputs.token }}
-          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
       #  TODO: add build command
-      # - name: Install dependencies and build
+      # - name: Install Dependencies
       #   run: |
       #     npm run co:login
       #     npm install
@@ -58,18 +48,14 @@ jobs:
       # - name: Run Unit Tests
       #   run: npm run test:unit --if-present
 
-      - name: Configure Git
-        run: |
-          git config --global user.name 'MikeyPartonBot[bot]'
-          git config --global user.email '166193391+MikeyPartonBot[bot]@users.noreply.github.com'
-
-      - name: 'Automated Version Bump'
-        run: |
-          npm version ${{ inputs.releaseType }} --git-tag-version false
-          NEW_VERSION=$(cat package.json | jq -r '.version')
-          git commit -am "chore: bump version $NEW_VERSION"
-          git remote add origin_https https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/${{ github.repository }}.git
-          git push origin_https HEAD:master
+      - name: Automated Version Bump
+        uses: phips28/gh-action-bump-version@master
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        with:
+          version-type: ${{ inputs.releaseType }}
+          skip-tag: true
+          commit-message: 'chore: bumps version to {{version}} [skip ci]'
 
       # - name: 'Publish to CodeArtifact'
       #   run: npm publish

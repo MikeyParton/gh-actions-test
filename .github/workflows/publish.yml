@@ -8,3 +8,4 @@ jobs:
     permissions:
       contents: write
     uses: ./.github/workflows/publish-npm-package.yml
+    secrets: inherit

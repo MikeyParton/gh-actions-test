@@ -19,11 +19,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: ./.github/actions/setup-bot.yml
+      - uses: ./.github/setup-bot
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
 
-      - uses: ./.github/actions/configure-release.yml
+      - uses: ./.github/configure-release
         id: configure-release

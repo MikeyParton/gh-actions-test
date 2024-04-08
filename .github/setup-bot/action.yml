@@ -18,7 +18,6 @@ runs:
         app-id: ${{ inputs.app-id }}
         private-key: ${{ inputs.private-key }}
     - name: Configure Git
-        run: |
-          git config --global user.name 'MikeyPartonBot[bot]'
-          git config --global user.email '166193391+MikeyPartonBot[bot]@users.noreply.github.com'
- 
+      run: |
+        git config --global user.name 'MikeyPartonBot[bot]'
+        git config --global user.email '166193391+MikeyPartonBot[bot]@users.noreply.github.com'

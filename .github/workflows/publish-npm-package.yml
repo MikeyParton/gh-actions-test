@@ -3,52 +3,25 @@ name: Publish npm package
 on:
   workflow_call:
     inputs:
-      packagePath:
+      package-path:
         description: Path to the package to publish
         required: false
         type: string
         default: './'
-      releaseType:
+      release-type:
         description: Type of release to publish
         required: false
         type: string
         default: 'patch'
 
 jobs:
-  configure-release-type:
-    runs-on: ubuntu-latest
-    outputs:
-      release_type: ${{ steps.configure-release.outputs.release_type }}
-    steps:
-      - name: 'Configure Release Type'
-        id: configure-release
-        run: |
-          echo ${{ github.event_name }}
-          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
-            RELEASE_TYPE="patch"  # default value
-            LABEL_NAMES=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name')
-            for label in $LABEL_NAMES; do
-              if [[ "$label" == "release:minor" ]]; then
-                RELEASE_TYPE="minor"
-                break
-              elif [[ "$label" == "release:major" ]]; then
-                RELEASE_TYPE="major"
-                break
-              fi
-            done
-          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            RELEASE_TYPE="${{ github.event.inputs.release_type }}"
-          fi
-          echo "Configured $RELEASE_TYPE release"
-          echo "RELEASE_TYPE=$RELEASE_TYPE" >> "$GITHUB_OUTPUT"
-
   publish-npm-package:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     defaults:
       run:
-        working-directory: ${{ inputs.packagePath }}
+        working-directory: ${{ inputs.package-path }}
 
     steps:
       - uses: actions/create-github-app-token@v1
@@ -64,9 +37,9 @@ jobs:
 
       - name: Validate releaseType
         run: |
-          case "${{ inputs.releaseType }}" in
+          case "${{ inputs.release-type }}" in
             patch|minor|major) ;;
-            *) echo "Error: Invalid releaseType. Allowed values are 'patch', 'minor', 'major'." && exit 1 ;;
+            *) echo "Error: Invalid release-type. Allowed values are 'patch', 'minor', 'major'." && exit 1 ;;
           esac
 
       - uses: actions/setup-node@v4
@@ -93,7 +66,7 @@ jobs:
 
       - name: 'Automated Version Bump'
         run: |
-          npm version ${{ inputs.releaseType }} --git-tag-version false
+          npm version ${{ inputs.release-type }} --git-tag-version false
           NEW_VERSION=$(cat package.json | jq -r '.version')
           PACKAGE_NAME=$(cat package.json | jq -r '.name')
           git commit -am "chore: bumps $PACKAGE_NAME to version $NEW_VERSION"

@@ -26,4 +26,4 @@ runs:
           RELEASE_TYPE="${{ github.event.inputs.release-type }}"
         fi
         echo "Configured $RELEASE_TYPE release"
-        echo "RELEASE_TYPE=$RELEASE_TYPE" >> "$GITHUB_OUTPUT"
+        echo "release-type=$RELEASE_TYPE" >> "$GITHUB_OUTPUT"

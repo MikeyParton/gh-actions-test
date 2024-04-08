@@ -29,3 +29,5 @@ jobs:
 
       - uses: ./.github/configure-release
         id: configure-release
+
+      - uses: ./.github/publish-npm-package

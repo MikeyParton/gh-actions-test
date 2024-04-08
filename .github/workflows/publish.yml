@@ -1,23 +1,35 @@
 name: Publish
 
 on:
+  pull_request:
+    types: [closed]
   workflow_dispatch:
     inputs:
-      release_type:
+      release-type:
         type: choice
-        description: 'Type of release to publish'
+        description: Type of release to publish
         required: true
-        default: 'patch'
-        options:
-          - patch
-          - minor
-          - major
+        default: patch
+        options: [patch, minor, major]
 
 jobs:
+  configure-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      release-type: ${{ steps.configure-release.outputs.release-type }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/configure-release.yml
+        id: configure-release
+
   publish:
+    if: ${{ needs.configure-release.outputs.release-type != '' }}
+    needs: configure-release
     permissions:
       contents: write
     uses: ./.github/workflows/publish-npm-package.yml
     secrets: inherit
     with:
-      releaseType: ${{ github.event.inputs.release_type }}
+      releaseType: ${{ needs.configure-release.outputs.release-type }}

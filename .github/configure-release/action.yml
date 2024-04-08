@@ -6,6 +6,7 @@ runs:
   using: composite
   steps:
     - name: Configure Release
+      shell: bash
       id: configure-release
       run: |
         echo ${{ github.event_name }}

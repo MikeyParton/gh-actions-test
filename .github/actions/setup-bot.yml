@@ -1,0 +1,24 @@
+name: Setup Bot
+inputs:
+  app-id:
+      description: The id of the GitHub App
+      required: true
+  private-key:
+    description: The private key for the GitHub App
+    required: true
+outputs:
+  token:
+    value: ${{ steps.app-token.outputs.token }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ inputs.app-id }}
+          private-key: ${{ inputs.private-key }}
+    - name: Configure Git
+        run: |
+          git config --global user.name 'MikeyPartonBot[bot]'
+          git config --global user.email '166193391+MikeyPartonBot[bot]@users.noreply.github.com'
+ 

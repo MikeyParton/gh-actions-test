@@ -1,0 +1,28 @@
+name: Configure Release
+outputs:
+  release-type:
+    value: ${{ steps.configure-release.outputs.release-type }}
+runs:
+  using: composite
+  steps:
+    - name: Configure Release
+      id: configure-release
+      run: |
+        echo ${{ github.event_name }}
+        if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
+          RELEASE_TYPE="patch"  # default value
+          LABEL_NAMES=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name')
+          for label in $LABEL_NAMES; do
+            if [[ "$label" == "release:minor" ]]; then
+              RELEASE_TYPE="minor"
+              break
+            elif [[ "$label" == "release:major" ]]; then
+              RELEASE_TYPE="major"
+              break
+            fi
+          done
+        elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          RELEASE_TYPE="${{ github.event.inputs.release-type }}"
+        fi
+        echo "Configured $RELEASE_TYPE release"
+        echo "RELEASE_TYPE=$RELEASE_TYPE" >> "$GITHUB_OUTPUT"

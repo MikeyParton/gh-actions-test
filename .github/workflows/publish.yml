@@ -32,4 +32,4 @@ jobs:
     uses: ./.github/workflows/publish-npm-package.yml
     secrets: inherit
     with:
-      releaseType: ${{ needs.configure-release.outputs.release-type }}
+      release-type: ${{ needs.configure-release.outputs.release-type }}

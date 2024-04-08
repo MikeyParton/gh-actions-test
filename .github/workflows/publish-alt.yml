@@ -3,7 +3,7 @@ name: Publish Alt
 on:
   workflow_dispatch:
     inputs:
-      release_type:
+      release-type:
         type: choice
         description: 'Type of release to publish'
         required: true

@@ -21,7 +21,7 @@ jobs:
       release-type: ${{ steps.configure-release.outputs.release-type }}
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/workflows/configure-release
+      - uses: ./.github/configure-release
         id: configure-release
 
   publish:

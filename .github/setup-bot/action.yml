@@ -2,9 +2,11 @@ name: Setup Bot
 inputs:
   app-id:
       description: The id of the GitHub App
+      type: string
       required: true
   private-key:
     description: The private key for the GitHub App
+    type: string
     required: true
 outputs:
   token:
